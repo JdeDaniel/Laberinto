@@ -18,11 +18,68 @@ def cargar_mapa(ruta_archivo):
     return matriz
 
 
-# Ejemplo de uso
+
+def encontrar_inicio(matriz):
+    for i, fila in enumerate(matriz):
+        for j, valor in enumerate(fila):
+            if valor == -1:
+                return (i, j)
+    return None
+
+def construir_arbol(matriz, inicio):
+    from collections import deque
+
+    arbol = {}
+    visitados = set()
+    queue = deque([inicio])
+    visitados.add(inicio)
+
+    # Movimientos: arriba, abajo, izquierda, derecha
+    movimientos = [(-1,0), (1,0), (0,-1), (0,1)]
+
+    while queue:
+        actual = queue.popleft()
+        hijos = []
+        for dx, dy in movimientos:
+            nx, ny = actual[0] + dx, actual[1] + dy
+            if 0 <= nx < len(matriz) and 0 <= ny < len(matriz[0]):
+                if matriz[nx][ny] == 1 and (nx, ny) not in visitados:
+                    hijos.append((nx, ny))
+                    queue.append((nx, ny))
+                    visitados.add((nx, ny))
+        arbol[actual] = hijos
+    return arbol
+
+# Construir el árbol si se ejecuta como script principal
 if __name__ == "__main__":
+    # Ejemplo de uso
     archivo_txt = input("Ingresa el nombre del archivo de mapa (con .txt): ")
     matriz_resultado = cargar_mapa(archivo_txt)
 
     print("Matriz generada:")
     for fila in matriz_resultado:
         print(fila)
+    
+        # Generar matriz de coordenadas para -1, 1 o 2
+    matriz_coordenadas = []
+    for i, fila in enumerate(matriz_resultado):
+        fila_coord = []
+        for j, valor in enumerate(fila):
+            if valor in (-1, 1, 2):
+                fila_coord.append((i, j))
+            else:
+                fila_coord.append(0)
+        matriz_coordenadas.append(fila_coord)
+
+    print("\nMatriz de coordenadas (-1, 1, 2):")
+    for fila in matriz_coordenadas:
+        print(fila)
+    
+    inicio = encontrar_inicio(matriz_resultado)
+    if inicio:
+        arbol = construir_arbol(matriz_resultado, inicio)
+        print("\nÁrbol generado (coordenadas):")
+        for nodo, hijos in arbol.items():
+            print(f"{nodo}: {hijos}")
+    else:
+        print("No se encontró el nodo de inicio (-1) en la matriz.")
