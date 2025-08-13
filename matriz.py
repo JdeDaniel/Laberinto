@@ -19,10 +19,12 @@ def cargar_mapa(ruta_archivo):
 
 
 # Ejemplo de uso
-if __name__ == "__main__":
+def escojer_mapa():
     archivo_txt = input("Ingresa el nombre del archivo de mapa (con .txt): ")
     matriz_resultado = cargar_mapa(archivo_txt)
 
-    print("Matriz generada:")
-    for fila in matriz_resultado:
-        print(fila)
+    return matriz_resultado
+
+    #print("Matriz generada:")
+    #for fila in matriz_resultado:
+    #    print(fila)
