@@ -41,7 +41,7 @@ def construir_arbol(matriz, inicio):
         for dx, dy in movimientos:
             nx, ny = actual[0] + dx, actual[1] + dy
             if 0 <= nx < len(matriz) and 0 <= ny < len(matriz[0]):
-                if matriz[nx][ny] == 1:
+                if matriz[nx][ny] == 1 or matriz[nx][ny] == 2:  # Solo agrega nodos con valor 1 o 2
                     hijos.append((nx, ny))  # Agrega todos los hijos con valor 1, aunque ya hayan sido visitados
                     if (nx, ny) not in visitados:
                         queue.append((nx, ny))
@@ -59,6 +59,7 @@ def bfs_camino(matriz, arbol, inicio):
                 objetivo = (i, j)
                 break
         if objetivo:
+            print("Objetivo encontrado en:", objetivo)
             break
 
     if not objetivo:
@@ -80,6 +81,36 @@ def bfs_camino(matriz, arbol, inicio):
                 queue.append((hijo, camino + [hijo]))
                 visitados.add(hijo)
     print("No hay camino del inicio al objetivo.")
+    return None
+
+def dfs_camino(matriz, arbol, inicio):
+    # Buscar la posición del objetivo (2)
+    objetivo = None
+    for i, fila in enumerate(matriz):
+        for j, valor in enumerate(fila):
+            if valor == 2:
+                objetivo = (i, j)
+                break
+        if objetivo:
+            break
+
+    if not objetivo:
+        print("No se encontró el nodo objetivo (2) en la matriz.")
+        return None
+
+    stack = [(inicio, [inicio])]
+    visitados = set()
+    visitados.add(inicio)
+
+    while stack:
+        actual, camino = stack.pop()
+        if actual == objetivo:
+            return camino
+        for hijo in arbol.get(actual, []):
+            if hijo not in visitados:
+                stack.append((hijo, camino + [hijo]))
+                visitados.add(hijo)
+    print("No hay camino del inicio al objetivo (DFS).")
     return None
 
 if __name__ == "__main__":
@@ -119,5 +150,15 @@ if __name__ == "__main__":
     if camino:
         print("\nCamino desde el inicio (-1) hasta el objetivo (2):")
         print(camino)
+        print(f"Pasos necesarios del origen a la meta: {len(camino) - 1}")
     else:
         print("No se encontró un camino del inicio al objetivo.")
+    
+        # Buscar y mostrar el camino usando DFS
+    camino_dfs = dfs_camino(matriz_resultado, arbol, inicio)
+    if camino_dfs:
+        print("\nCamino DFS desde el inicio (-1) hasta el objetivo (2):")
+        print(camino_dfs)
+        print(f"Pasos necesarios del origen a la meta (DFS): {len(camino_dfs) - 1}")
+    else:
+        print("No se encontró un camino del inicio al objetivo (DFS).")
