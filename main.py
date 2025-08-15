@@ -1,15 +1,15 @@
 
 from matriz import *
-from BFS import *
-from DFS import *
+from Laberinto import *
 
 mapa = []
 matriz = []
 coordenadas = [] # creo que las coordenadas no son necesarias 
 arbol = {}
-Inicio = {} 
+Inicio = ()
 
 def escojer_mapa():
+    global mapa, matriz, coordenadas, arbol, Inicio
     archivo_txt = input("Ingresa el nombre del archivo de mapa (con .txt): ")
     mapa = cargar_mapa(archivo_txt)
 
@@ -32,9 +32,9 @@ def escojer_mapa():
     for fila in coordenadas:
         print(fila) # Una vez comprobado borrar
 
-    inicio = encontrar_inicio(matriz) 
-    if inicio: # Si se encuentra el nodo de inicio
-        arbol = construir_arbol(matriz, inicio) # Construye el árbol de búsqueda
+    Inicio = encontrar_inicio(matriz) 
+    if Inicio: # Si se encuentra el nodo de inicio
+        arbol = construir_arbol(matriz, Inicio) # Construye el árbol de búsqueda
 
         #Quitar esto en un momento
         print("\nÁrbol generado (coordenadas):") 
@@ -45,6 +45,7 @@ def escojer_mapa():
 
 
 def menu():
+    global mapa, matriz, coordenadas, arbol, Inicio
     choice = 0
     while choice != '4':
         print("Menu")
