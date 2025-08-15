@@ -68,6 +68,8 @@ def generarMatrizCoordenadas(matriz):
         matriz_coordenadas.append(fila_coord)
     return matriz_coordenadas
 
+
+
 """
 if __name__ == "__main__":
     archivo_txt = input("Ingresa el nombre del archivo de mapa (con .txt): ")

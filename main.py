@@ -7,6 +7,7 @@ mapa = []
 matriz = []
 coordenadas = [] # creo que las coordenadas no son necesarias 
 arbol = {}
+Inicio = {} 
 
 def escojer_mapa():
     archivo_txt = input("Ingresa el nombre del archivo de mapa (con .txt): ")
@@ -44,28 +45,31 @@ def escojer_mapa():
 
 
 def menu():
-    print("Menu")
-    print("1. Resolver por BFS")
-    print("2. Resolver por DFS")
-    print("3. Cambiar laberinto")
-    print("4. Salir")
+    choice = 0
+    while choice != '4':
+        print("Menu")
+        print("1. Resolver por BFS")
+        print("2. Resolver por DFS")
+        print("3. Cambiar laberinto")
+        print("4. Salir")
+        choice = input("Por favor selecciona una opcion (1-4): ")
+        
 
-    choice = input("Por favor selecciona una opcion (1-4): ")
-
-    if choice == '1':
-        print("You selected Option 1.")
-    elif choice == '2':
-        print("You selected Option 2.")
-    elif choice == '3':
-        matrizLaberinto = escojer_mapa()
-    elif choice == '4':
-        print("Exiting the menu. Goodbye!")
-    else:
-        print("Invalid choice, please try again.")
+        if choice == '1':
+            if arbol == None:
+                print("No se ha escojido ningún laberinto. Por favor, elige un laberinto primero.")
+            else:
+                bfs_camino(matriz, arbol, Inicio)
+                return
+        elif choice == '2':
+            print("You selected Option 2.")
+        elif choice == '3':
+            matrizLaberinto = escojer_mapa()
+        elif choice == '4':
+            print("Adios!")
+        else:
+            print("Opcion no valida.")
 
 
 if __name__ == "__main__":
-    while True:
-        menu()
-        if input("¿Quiere regresar al menu? (si/no): ").lower() != 'si':
-            break
+    menu()
