@@ -1,4 +1,6 @@
 from collections import deque
+from colorama import Fore, Style, init
+init(autoreset=True)
 
 def cargar_mapa(ruta_archivo):
     # Diccionario de conversión de caracteres a valores numéricos
@@ -113,6 +115,29 @@ def dfs_camino(matriz, arbol, inicio):
     print("No hay camino del inicio al objetivo (DFS).")
     return None
 
+
+def mostrar_laberinto_coloreado(matriz, camino, titulo):
+    print(f"\n{titulo}")
+    for i, fila in enumerate(matriz):
+        linea = ""
+        for j, valor in enumerate(fila):
+            if (i, j) in camino:
+                linea += Fore.GREEN + "●" + Style.RESET_ALL  # Camino en verde
+            elif valor == 0:
+                linea += Fore.YELLOW + "#" + Style.RESET_ALL  # Pared en amarillo
+            elif valor == 1:
+                linea += Fore.YELLOW + "." + Style.RESET_ALL  # Camino libre en amarillo
+            elif valor == -1:
+                linea += Fore.YELLOW + "S" + Style.RESET_ALL  # Inicio en amarillo
+            elif valor == 2:
+                linea += Fore.YELLOW + "G" + Style.RESET_ALL  # Meta en amarillo
+            else:
+                linea += " "
+        print(linea)
+
+
+
+
 if __name__ == "__main__":
     archivo_txt = input("Ingresa el nombre del archivo de mapa (con .txt): ")
     matriz_resultado = cargar_mapa(archivo_txt)
@@ -148,8 +173,7 @@ if __name__ == "__main__":
         # Buscar y mostrar el camino del inicio al objetivo
     camino = bfs_camino(matriz_resultado, arbol, inicio)
     if camino:
-        print("\nCamino desde el inicio (-1) hasta el objetivo (2):")
-        print(camino)
+        mostrar_laberinto_coloreado(matriz_resultado, camino, "Laberinto con camino BFS (verde)")
         print(f"Pasos necesarios del origen a la meta: {len(camino) - 1}")
     else:
         print("No se encontró un camino del inicio al objetivo.")
@@ -157,8 +181,10 @@ if __name__ == "__main__":
         # Buscar y mostrar el camino usando DFS
     camino_dfs = dfs_camino(matriz_resultado, arbol, inicio)
     if camino_dfs:
-        print("\nCamino DFS desde el inicio (-1) hasta el objetivo (2):")
-        print(camino_dfs)
+        mostrar_laberinto_coloreado(matriz_resultado, camino_dfs, "Laberinto con camino DFS (verde)")
         print(f"Pasos necesarios del origen a la meta (DFS): {len(camino_dfs) - 1}")
     else:
         print("No se encontró un camino del inicio al objetivo (DFS).")
+
+
+    
