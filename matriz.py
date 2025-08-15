@@ -1,6 +1,15 @@
 from collections import deque
 
 def cargar_mapa(ruta_archivo):
+    
+    matriz = []
+
+    with open(ruta_archivo, 'r') as archivo:
+        for linea in archivo:
+            matriz.append(linea.strip())
+    return matriz
+
+def convertirmapa(matriz):
     # Diccionario de conversión de caracteres a valores numéricos
     conversion = {
         '#': 0,
@@ -9,15 +18,14 @@ def cargar_mapa(ruta_archivo):
         'G': 2
     }
 
-    matriz = []
+    newMatriz = []
 
-    with open(ruta_archivo, 'r') as archivo:
-        for linea in archivo:
-            # Elimina saltos de línea 
-            fila = [conversion.get(caracter, None) for caracter in linea.strip()]
-            matriz.append(fila)
+    for linea in matriz:
+        # Elimina saltos de línea 
+        fila = [conversion.get(caracter, None) for caracter in linea.strip()]
+        newMatriz.append(fila)
 
-    return matriz
+    return newMatriz
 
 def encontrar_inicio(matriz): # Encuentra la posición del nodo de inicio (-1)
     for i, fila in enumerate(matriz):
@@ -41,13 +49,26 @@ def construir_arbol(matriz, inicio): # Construye un árbol de búsqueda a partir
         for dx, dy in movimientos: 
             nx, ny = actual[0] + dx, actual[1] + dy # Calcula las nuevas coordenadas
             if 0 <= nx < len(matriz) and 0 <= ny < len(matriz[0]): # Verifica que las coordenadas estén dentro de los límites de la matriz
-                if matriz[nx][ny] == 1 and (nx, ny) not in visitados: # Si la celda es transitable y no ha sido visitada
+                if (matriz[nx][ny] == 1 or matriz [nx][ny] == 2)  and (nx, ny) not in visitados: # Si la celda es transitable y no ha sido visitada
                     hijos.append((nx, ny)) # Agrega la celda como hijo del nodo actual
                     queue.append((nx, ny)) 
                     visitados.add((nx, ny))
         arbol[actual] = hijos # Añade el nodo actual y sus hijos al árbol
     return arbol 
 
+def generarMatrizCoordenadas(matriz):
+    matriz_coordenadas = []
+    for i, fila in enumerate(matriz):
+        fila_coord = []
+        for j, valor in enumerate(fila):
+            if valor in (-1, 1, 2):
+                fila_coord.append((i, j))
+            else:
+                fila_coord.append(0)
+        matriz_coordenadas.append(fila_coord)
+    return matriz_coordenadas
+
+"""
 if __name__ == "__main__":
     archivo_txt = input("Ingresa el nombre del archivo de mapa (con .txt): ")
     matriz_resultado = cargar_mapa(archivo_txt)
@@ -79,3 +100,4 @@ if __name__ == "__main__":
             print(f"{nodo}: {hijos}")
     else:
         print("No se encontró el nodo de inicio (-1) en la matriz.") # Mensaje de error si no se encuentra el nodo de inicio
+"""
