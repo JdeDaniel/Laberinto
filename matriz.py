@@ -26,7 +26,7 @@ def encontrar_inicio(matriz): # Encuentra la posición del nodo de inicio (-1)
                 return (i, j)
     return None
 
-def construir_arbol(matriz, inicio): # Construye un árbol de búsqueda a partir del nodo de inicio
+def construir_arbol(matriz, inicio):
     arbol = {}
     visitados = set()
     queue = deque([inicio])
@@ -35,18 +35,52 @@ def construir_arbol(matriz, inicio): # Construye un árbol de búsqueda a partir
     # Movimientos: arriba, abajo, izquierda, derecha
     movimientos = [(-1,0), (1,0), (0,-1), (0,1)]
 
-    while queue: # Mientras haya nodos en la cola
-        actual = queue.popleft() # Extrae el nodo actual de la cola
-        hijos = [] # Lista de hijos del nodo actual
-        for dx, dy in movimientos: 
-            nx, ny = actual[0] + dx, actual[1] + dy # Calcula las nuevas coordenadas
-            if 0 <= nx < len(matriz) and 0 <= ny < len(matriz[0]): # Verifica que las coordenadas estén dentro de los límites de la matriz
-                if matriz[nx][ny] == 1 and (nx, ny) not in visitados: # Si la celda es transitable y no ha sido visitada
-                    hijos.append((nx, ny)) # Agrega la celda como hijo del nodo actual
-                    queue.append((nx, ny)) 
-                    visitados.add((nx, ny))
-        arbol[actual] = hijos # Añade el nodo actual y sus hijos al árbol
-    return arbol 
+    while queue:
+        actual = queue.popleft()
+        hijos = []
+        for dx, dy in movimientos:
+            nx, ny = actual[0] + dx, actual[1] + dy
+            if 0 <= nx < len(matriz) and 0 <= ny < len(matriz[0]):
+                if matriz[nx][ny] == 1:
+                    hijos.append((nx, ny))  # Agrega todos los hijos con valor 1, aunque ya hayan sido visitados
+                    if (nx, ny) not in visitados:
+                        queue.append((nx, ny))
+                        visitados.add((nx, ny))
+        arbol[actual] = hijos
+    return arbol
+
+def bfs_camino(matriz, arbol, inicio):
+
+    # Buscar la posición del objetivo (2)
+    objetivo = None
+    for i, fila in enumerate(matriz):
+        for j, valor in enumerate(fila):
+            if valor == 2:
+                objetivo = (i, j)
+                break
+        if objetivo:
+            break
+
+    if not objetivo:
+        print("No se encontró el nodo objetivo (2) en la matriz.")
+        return None
+
+    # BFS para encontrar el camino
+    queue = deque()
+    queue.append((inicio, [inicio]))  # (nodo_actual, camino_hasta_ahora)
+    visitados = set()
+    visitados.add(inicio)
+
+    while queue:
+        actual, camino = queue.popleft()
+        if actual == objetivo:
+            return camino
+        for hijo in arbol.get(actual, []):
+            if hijo not in visitados:
+                queue.append((hijo, camino + [hijo]))
+                visitados.add(hijo)
+    print("No hay camino del inicio al objetivo.")
+    return None
 
 if __name__ == "__main__":
     archivo_txt = input("Ingresa el nombre del archivo de mapa (con .txt): ")
@@ -79,3 +113,11 @@ if __name__ == "__main__":
             print(f"{nodo}: {hijos}")
     else:
         print("No se encontró el nodo de inicio (-1) en la matriz.") # Mensaje de error si no se encuentra el nodo de inicio
+
+        # Buscar y mostrar el camino del inicio al objetivo
+    camino = bfs_camino(matriz_resultado, arbol, inicio)
+    if camino:
+        print("\nCamino desde el inicio (-1) hasta el objetivo (2):")
+        print(camino)
+    else:
+        print("No se encontró un camino del inicio al objetivo.")
