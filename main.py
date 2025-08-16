@@ -61,9 +61,11 @@ def menu():
                 print("No se ha escojido ningún laberinto. Por favor, elige un laberinto primero.")
             else:
                 bfs_camino(matriz, arbol, Inicio)
-                return
         elif choice == '2':
-            print("You selected Option 2.")
+            if arbol == None:
+                print("No se ha escojido ningún laberinto. Por favor, elige un laberinto primero.")
+            else:
+                dfs_camino(matriz, arbol, Inicio)
         elif choice == '3':
             matrizLaberinto = escojer_mapa()
         elif choice == '4':
