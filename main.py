@@ -14,34 +14,41 @@ def escojer_mapa():
     mapa = cargar_mapa(archivo_txt)
 
     #Quitar esto en un momento
+    """
     print("Mapa:")
     for fila in mapa:
         print(fila)
-
+    """
     matriz = convertirmapa(mapa)
+
+    """
     #Quitar esto en un momento
     print("Matriz:")
     for fila in matriz:
         print(fila)
+    """
 
-    #Quitar esto en un momento
     coordenadas = generarMatrizCoordenadas(matriz)
 
+    """
     #Quitar esto en un momento
     print("\nMatriz de coordenadas (-1, 1, 2):")
     for fila in coordenadas:
         print(fila) # Una vez comprobado borrar
+    """
 
     Inicio = encontrar_inicio(matriz) 
     if Inicio: # Si se encuentra el nodo de inicio
         arbol = construir_arbol(matriz, Inicio) # Construye el árbol de búsqueda
 
+        """
         #Quitar esto en un momento
         print("\nÁrbol generado (coordenadas):") 
         for nodo, hijos in arbol.items(): # Imprime el árbol con nodos y sus hijos, borrar para entrega
             print(f"{nodo}: {hijos}")
     else:
-        print("No se encontró el nodo de inicio (-1) en la matriz.") # Mensaje de error si no se encuentra el nodo de inicio
+        print("No se encontró el nodo de inicio (-1) en la matriz.") # Mensaje de erro  r si no se encuentra el nodo de inicio
+        """
 
 
 def menu():
