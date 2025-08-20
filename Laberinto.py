@@ -4,8 +4,6 @@ import time
 init(autoreset=True)
 
 def bfs_camino(matriz, arbol, inicio):
-    print(inicio)
-
     # Buscar la posición del objetivo (2)
     objetivo = None
     for i, fila in enumerate(matriz):
