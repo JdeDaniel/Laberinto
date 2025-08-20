@@ -1,6 +1,4 @@
 from collections import deque
-from colorama import Fore, Style, init
-init(autoreset=True)
 
 def cargar_mapa(ruta_archivo):
     
@@ -36,7 +34,7 @@ def encontrar_inicio(matriz): # Encuentra la posición del nodo de inicio (-1)
                 return (i, j)
     return None
 
-def construir_arbol(matriz, inicio):
+def construir_arbol(matriz, inicio): # Construye un árbol de búsqueda a partir del nodo de inicio
     arbol = {}
     visitados = set()
     queue = deque([inicio])
@@ -45,100 +43,63 @@ def construir_arbol(matriz, inicio):
     # Movimientos: arriba, abajo, izquierda, derecha
     movimientos = [(-1,0), (1,0), (0,-1), (0,1)]
 
-    while queue:
-        actual = queue.popleft()
-        hijos = []
-        for dx, dy in movimientos:
-            nx, ny = actual[0] + dx, actual[1] + dy
-            if 0 <= nx < len(matriz) and 0 <= ny < len(matriz[0]):
-                if matriz[nx][ny] == 1 or matriz[nx][ny] == 2:  # Solo agrega nodos con valor 1 o 2
-                    hijos.append((nx, ny))  # Agrega todos los hijos con valor 1, aunque ya hayan sido visitados
-                    if (nx, ny) not in visitados:
-                        queue.append((nx, ny))
-                        visitados.add((nx, ny))
-        arbol[actual] = hijos
-    return arbol
+    while queue: # Mientras haya nodos en la cola
+        actual = queue.popleft() # Extrae el nodo actual de la cola
+        hijos = [] # Lista de hijos del nodo actual
+        for dx, dy in movimientos: 
+            nx, ny = actual[0] + dx, actual[1] + dy # Calcula las nuevas coordenadas
+            if 0 <= nx < len(matriz) and 0 <= ny < len(matriz[0]): # Verifica que las coordenadas estén dentro de los límites de la matriz
+                if (matriz[nx][ny] == 1 or matriz [nx][ny] == 2)  and (nx, ny) not in visitados: # Si la celda es transitable y no ha sido visitada
+                    hijos.append((nx, ny)) # Agrega la celda como hijo del nodo actual
+                    queue.append((nx, ny)) 
+                    visitados.add((nx, ny))
+        arbol[actual] = hijos # Añade el nodo actual y sus hijos al árbol
+    return arbol 
 
-def bfs_camino(matriz, arbol, inicio):
-
-    # Buscar la posición del objetivo (2)
-    objetivo = None
+def generarMatrizCoordenadas(matriz):
+    matriz_coordenadas = []
     for i, fila in enumerate(matriz):
+        fila_coord = []
         for j, valor in enumerate(fila):
-            if valor == 2:
-                objetivo = (i, j)
-                break
-        if objetivo:
-            print("Objetivo encontrado en:", objetivo)
-            break
-
-    if not objetivo:
-        print("No se encontró el nodo objetivo (2) en la matriz.")
-        return None
-
-    # BFS para encontrar el camino
-    queue = deque()
-    queue.append((inicio, [inicio]))  # (nodo_actual, camino_hasta_ahora)
-    visitados = set()
-    visitados.add(inicio)
-
-    while queue:
-        actual, camino = queue.popleft()
-        if actual == objetivo:
-            return camino
-        for hijo in arbol.get(actual, []):
-            if hijo not in visitados:
-                queue.append((hijo, camino + [hijo]))
-                visitados.add(hijo)
-    print("No hay camino del inicio al objetivo.")
-    return None
-
-def dfs_camino(matriz, arbol, inicio):
-    # Buscar la posición del objetivo (2)
-    objetivo = None
-    for i, fila in enumerate(matriz):
-        for j, valor in enumerate(fila):
-            if valor == 2:
-                objetivo = (i, j)
-                break
-        if objetivo:
-            break
-
-    if not objetivo:
-        print("No se encontró el nodo objetivo (2) en la matriz.")
-        return None
-
-    stack = [(inicio, [inicio])]
-    visitados = set()
-    visitados.add(inicio)
-
-    while stack:
-        actual, camino = stack.pop()
-        if actual == objetivo:
-            return camino
-        for hijo in arbol.get(actual, []):
-            if hijo not in visitados:
-                stack.append((hijo, camino + [hijo]))
-                visitados.add(hijo)
-    print("No hay camino del inicio al objetivo (DFS).")
-    return None
-
-
-def mostrar_laberinto_coloreado(matriz, camino, titulo):
-    print(f"\n{titulo}")
-    for i, fila in enumerate(matriz):
-        linea = ""
-        for j, valor in enumerate(fila):
-            if (i, j) in camino:
-                linea += Fore.GREEN + "●" + Style.RESET_ALL  # Camino en verde
-            elif valor == 0:
-                linea += Fore.YELLOW + "#" + Style.RESET_ALL  # Pared en amarillo
-            elif valor == 1:
-                linea += Fore.YELLOW + "." + Style.RESET_ALL  # Camino libre en amarillo
-            elif valor == -1:
-                linea += Fore.YELLOW + "S" + Style.RESET_ALL  # Inicio en amarillo
-            elif valor == 2:
-                linea += Fore.YELLOW + "G" + Style.RESET_ALL  # Meta en amarillo
+            if valor in (-1, 1, 2):
+                fila_coord.append((i, j))
             else:
-                linea += " "
-        print(linea)
+                fila_coord.append(0)
+        matriz_coordenadas.append(fila_coord)
+    return matriz_coordenadas
+
+
+
+"""
+if __name__ == "__main__":
+    archivo_txt = input("Ingresa el nombre del archivo de mapa (con .txt): ")
+    matriz_resultado = cargar_mapa(archivo_txt)
+
+    print("Matriz generada:")
+    for fila in matriz_resultado:
+        print(fila)
+    
+        # Generar matriz de coordenadas para -1, 1 o 2
+    matriz_coordenadas = []
+    for i, fila in enumerate(matriz_resultado):
+        fila_coord = []
+        for j, valor in enumerate(fila):
+            if valor in (-1, 1, 2):
+                fila_coord.append((i, j))
+            else:
+                fila_coord.append(0)
+        matriz_coordenadas.append(fila_coord)
+
+    print("\nMatriz de coordenadas (-1, 1, 2):")
+    for fila in matriz_coordenadas:
+        print(fila) # Una vez comprobado borrar
+    
+    inicio = encontrar_inicio(matriz_resultado) 
+    if inicio: # Si se encuentra el nodo de inicio
+        arbol = construir_arbol(matriz_resultado, inicio) # Construye el árbol de búsqueda
+        print("\nÁrbol generado (coordenadas):") 
+        for nodo, hijos in arbol.items(): # Imprime el árbol con nodos y sus hijos, borrar para entrega
+            print(f"{nodo}: {hijos}")
+    else:
+        print("No se encontró el nodo de inicio (-1) en la matriz.") # Mensaje de error si no se encuentra el nodo de inicio
+"""
