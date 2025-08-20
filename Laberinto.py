@@ -73,6 +73,46 @@ def dfs_camino(matriz, arbol, inicio):
                 stack.append((hijo, camino + [hijo]))
                 visitados.add(hijo)
 
+def costos_camino(matriz, arbol, inicio):
+    # Buscar la posición del objetivo (2)
+    objetivo = None
+    for i, fila in enumerate(matriz):
+        for j, valor in enumerate(fila):
+            if valor == 2:
+                objetivo = (i, j)
+                break
+        if objetivo:
+            break
+
+    if not objetivo:
+        print("No se encontró el nodo objetivo (2) en la matriz.")
+        return None
+
+    # BFS para encontrar el camino
+    star = time.time()
+    queue = deque()
+    queue.append((inicio, [inicio], 0))  # (nodo_actual, camino_hasta_ahora, costo_acumulado)
+    visitados = set()
+    visitados.add(inicio)
+
+    while queue:
+        actual, camino, costo = queue.popleft()
+        if actual == objetivo:
+            end = time.time()
+            print(f"==Costos==")
+            print(f"Longitud de la ruta: {len(camino) - 1}")
+            print(f"Costo total del camino: {costo}")
+            print(f"Nodos visitados: {len(visitados) - 1}")
+            print(f"Tiempo de ejecución: {end - star} segundos")
+            mostrar_laberinto_coloreado(matriz, camino, "Laberinto con camino Costos (verde)")
+
+        for hijo in arbol.get(actual, []):
+            if hijo not in visitados:
+                print(matriz[hijo[0]][hijo[1]])
+                nuevo_costo = costo + 1  # Asumiendo un costo uniforme de 1 por movimiento
+                queue.append((hijo, camino + [hijo], nuevo_costo))
+                visitados.add(hijo)
+
 def mostrar_laberinto_coloreado(matriz, camino, titulo):
     print(f"\n{titulo}")
     for i, fila in enumerate(matriz):

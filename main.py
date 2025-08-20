@@ -59,7 +59,8 @@ def menu():
         print("1. Resolver por BFS")
         print("2. Resolver por DFS")
         print("3. Cambiar laberinto")
-        print("4. Salir")
+        print("4. Resolver por Costos Uniformes")
+        print("5. Salir")
         choice = input("Por favor selecciona una opcion (1-4): ")
         
 
@@ -76,7 +77,13 @@ def menu():
         elif choice == '3':
             matrizLaberinto = escojer_mapa()
         elif choice == '4':
+            if arbol == None:
+                print("No se ha escojido ningún laberinto. Por favor, elige un laberinto primero.")
+            else:
+                costos_camino(matriz, arbol, Inicio)
+        elif choice == '5':
             print("Adios!")
+            return
         else:
             print("Opcion no valida.")
 
