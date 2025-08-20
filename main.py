@@ -43,7 +43,7 @@ def escojer_mapa():
 
         """
         #Quitar esto en un momento
-        print("\nÁrbol generado (coordenadas):") 
+        print("\nÁrbol generado (coordenadas):")
         for nodo, hijos in arbol.items(): # Imprime el árbol con nodos y sus hijos, borrar para entrega
             print(f"{nodo}: {hijos}")
     else:
