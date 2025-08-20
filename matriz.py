@@ -15,14 +15,16 @@ def convertirmapa(matriz):
         '#': 0,
         '.': 1,
         'S': -1,
-        'G': 2
+        'G': 2,
+        ',': 5,  # Coma como un tipo de terreno dificil 
+        '~': 10  # Agua
     }
 
     newMatriz = []
 
     for linea in matriz:
         # Elimina saltos de línea 
-        fila = [conversion.get(caracter, None) for caracter in linea.strip()]
+        fila = [conversion.get(caracter, None) for caracter in linea.strip() if caracter != ' ']
         newMatriz.append(fila)
 
     return newMatriz
@@ -49,7 +51,7 @@ def construir_arbol(matriz, inicio): # Construye un árbol de búsqueda a partir
         for dx, dy in movimientos: 
             nx, ny = actual[0] + dx, actual[1] + dy # Calcula las nuevas coordenadas
             if 0 <= nx < len(matriz) and 0 <= ny < len(matriz[0]): # Verifica que las coordenadas estén dentro de los límites de la matriz
-                if (matriz[nx][ny] == 1 or matriz [nx][ny] == 2)  and (nx, ny) not in visitados: # Si la celda es transitable y no ha sido visitada
+                if (matriz[nx][ny] != 0 and matriz [nx][ny] != -1)  and (nx, ny) not in visitados: # Si la celda es transitable y no ha sido visitada
                     hijos.append((nx, ny)) # Agrega la celda como hijo del nodo actual
                     queue.append((nx, ny)) 
                     visitados.add((nx, ny))
