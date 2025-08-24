@@ -54,14 +54,14 @@ def escojer_mapa():
 def menu():
     global mapa, matriz, coordenadas, arbol, Inicio
     choice = 0
-    while choice != '4':
+    while choice != '5':
         print("Menu")
         print("1. Resolver por BFS")
         print("2. Resolver por DFS")
-        print("3. Cambiar laberinto")
-        print("4. Resolver por Costos Uniformes")
+        print("3. Resolver por Costos Uniformes")
+        print("4. Cambiar laberinto")
         print("5. Salir")
-        choice = input("Por favor selecciona una opcion (1-4): ")
+        choice = input("Por favor selecciona una opcion (1-5): ")
         
 
         if choice == '1':
@@ -75,12 +75,12 @@ def menu():
             else:
                 dfs_camino(matriz, arbol, Inicio)
         elif choice == '3':
-            matrizLaberinto = escojer_mapa()
-        elif choice == '4':
             if arbol == None:
                 print("No se ha escojido ningún laberinto. Por favor, elige un laberinto primero.")
             else:
                 costos_camino(matriz, arbol, Inicio)
+        elif choice == '4':
+            escojer_mapa()
         elif choice == '5':
             print("Adios!")
             return

@@ -101,7 +101,7 @@ def costos_camino(matriz, arbol, inicio):
             end = time.time()
             print(f"==Costos==")
             print(f"Longitud de la ruta: {len(camino) - 1}")
-            print(f"Costo total del camino: {costo}")
+            print(f"Costo total del camino: {costo - 2}")
             print(f"Nodos visitados: {len(visitados) - 1}")
             print(f"Tiempo de ejecución: {end - star} segundos")
             mostrar_laberinto_coloreado(matriz, camino, "Laberinto con camino Costos (verde)")
@@ -109,7 +109,7 @@ def costos_camino(matriz, arbol, inicio):
         for hijo in arbol.get(actual, []):
             if hijo not in visitados:
                 print(matriz[hijo[0]][hijo[1]])
-                nuevo_costo = costo + 1  # Asumiendo un costo uniforme de 1 por movimiento
+                nuevo_costo = costo + matriz[hijo[0]][hijo[1]]  # Asumiendo un costo uniforme de 1 por movimiento
                 queue.append((hijo, camino + [hijo], nuevo_costo))
                 visitados.add(hijo)
 
