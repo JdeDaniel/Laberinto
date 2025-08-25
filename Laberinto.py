@@ -1,6 +1,7 @@
 from collections import deque
 from colorama import Fore, Style, init
 import time
+import heapq
 init(autoreset=True)
 
 def bfs_camino(matriz, arbol, inicio):
@@ -90,15 +91,15 @@ def costos_camino(matriz, inicio):
 
     # Costos Uniformes para encontrar el camino
     star = time.time()
-    queue = deque()
-    queue.append((inicio, [inicio], 0))  # (nodo_actual, camino_hasta_ahora, costo_acumulado)
+    queue = []
+    heapq.heappush(queue, (0, inicio, [inicio]))  # (costo, nodo_actual, camino_hasta_ahora)
     visitados = set()
     visitados.add(inicio)
     mejor_camino = None
     
     while queue:
         print("Cola actual:", queue) # Imprime el estado actual de la cola
-        actual, camino, costo = queue.popleft()
+        costo, actual, camino= heapq.heappop(queue)
         if actual == objetivo: 
             if mejor_camino is None or costo < mejor_camino[1]:
                 mejor_camino = (camino, costo)
@@ -108,7 +109,7 @@ def costos_camino(matriz, inicio):
             if 0 <= nx < len(matriz) and 0 <= ny < len(matriz[0]) and matriz[nx][ny] != 0:
                 if matriz[nx][ny] != 0 and (nx, ny) not in visitados:
                     nuevo_costo = costo + matriz[nx][ny]
-                    queue.append(((nx, ny), camino + [(nx, ny)], nuevo_costo))
+                    heapq.heappush(queue, (nuevo_costo, (nx, ny), camino + [(nx, ny)]))
                     if (matriz[nx][ny] != 2):
                         visitados.add((nx, ny))
 
