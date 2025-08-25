@@ -46,9 +46,10 @@ def escojer_mapa():
         print("\nÁrbol generado (coordenadas):")
         for nodo, hijos in arbol.items(): # Imprime el árbol con nodos y sus hijos, borrar para entrega
             print(f"{nodo}: {hijos}")
+        """
     else:
         print("No se encontró el nodo de inicio (-1) en la matriz.") # Mensaje de erro  r si no se encuentra el nodo de inicio
-        """
+        
 
 
 def menu():
@@ -78,7 +79,7 @@ def menu():
             if arbol == None:
                 print("No se ha escojido ningún laberinto. Por favor, elige un laberinto primero.")
             else:
-                costos_camino(matriz, arbol, Inicio)
+                costos_camino(matriz, Inicio)
         elif choice == '4':
             escojer_mapa()
         elif choice == '5':
