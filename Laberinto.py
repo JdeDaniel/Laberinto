@@ -98,7 +98,6 @@ def costos_camino(matriz, inicio):
     mejor_camino = None
     
     while queue:
-        print("Cola actual:", queue) # Imprime el estado actual de la cola
         costo, actual, camino= heapq.heappop(queue)
         if actual == objetivo: 
             if mejor_camino is None or costo < mejor_camino[1]:
@@ -125,20 +124,30 @@ def costos_camino(matriz, inicio):
 
 def mostrar_laberinto_coloreado(matriz, camino, titulo):
     print(f"\n{titulo}")
+    symbol_map = {
+        -1: "S",
+        2: "G",
+        0: "#",
+        1: ".",
+        5: ",",
+        10: "~"
+    }
+    color_map = {
+        -1: Fore.YELLOW,
+        2: Fore.RED,
+        0: Fore.WHITE,
+        1: Fore.WHITE,
+        5: Fore.MAGENTA,
+        10: Fore.BLUE
+    }
     for i, fila in enumerate(matriz):
         linea = ""
         for j, valor in enumerate(fila):
-            if valor == -1:
-                linea += Fore.YELLOW + "S" + Style.RESET_ALL  # Inicio en amarillo
-            elif valor == 2:
-                linea += Fore.RED + "G" + Style.RESET_ALL  # Meta en amarillo
-            elif (i, j) in camino:
-                linea += Fore.GREEN + "●" + Style.RESET_ALL  # Camino en verde
-            elif valor == 0:
-                linea += Fore.WHITE + "#" + Style.RESET_ALL  # Pared en amarillo
-            elif valor == 1:
-                linea += Fore.WHITE + "." + Style.RESET_ALL  # Camino libre en amarillos
+            simbolo = symbol_map.get(valor, " ")
+            if (i, j) in camino and valor not in (-1, 2):
+                color = Fore.GREEN
             else:
-                linea += " "
+                color = color_map.get(valor, Fore.WHITE)
+            linea += color + simbolo + Style.RESET_ALL
         print(linea)
     return None
