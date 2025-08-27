@@ -137,7 +137,9 @@ def buscar_objetivo(matriz):
     for i, fila in enumerate(matriz):
         for j, valor in enumerate(fila):
             if valor == 2:
+                print("Objetivo encontrado en:", (i, j))
                 return (i, j)
+
     return None
 
 # ---------------- NUEVO: Algoritmo A* ---------------- #
@@ -150,38 +152,53 @@ def a_estrella_camino(matriz, inicio, heuristica="manhattan"):
     def heuristica_func(nodo):
         if heuristica == "euclidiana":
             return math.sqrt((nodo[0] - objetivo[0])**2 + (nodo[1] - objetivo[1])**2)
-        else: # Manhattan por defecto
+        else:  # Manhattan por defecto
             return abs(nodo[0] - objetivo[0]) + abs(nodo[1] - objetivo[1])
-
 
     star = time.time()
     queue = []
-    heapq.heappush(queue, (0 + heuristica_func(inicio), 0, inicio, [inicio]))
+    heapq.heappush(queue, (heuristica_func(inicio), 0, inicio))
     visitados = set()
-
+    padres = {inicio: None}
+    g_score = {inicio: 0}
+    h_score = {inicio: heuristica_func(inicio)}
 
     while queue:
-        f, costo, actual, camino = heapq.heappop(queue)
+        f, costo, actual = heapq.heappop(queue)
         if actual == objetivo:
+            # Reconstruir el camino usando el diccionario de padres
+            camino = []
+            nodo = actual
+            while nodo is not None:
+                camino.append(nodo)
+                nodo = padres[nodo]
+            camino.reverse()
             end = time.time()
             print(f"==A* ({heuristica.capitalize()})==")
             print(f"Longitud de la ruta: {len(camino) - 1}")
-            print(f"Costo total del camino: {costo - 2}")
+            print(f"Costo total del camino: {g_score[actual]}")
             print(f"Nodos visitados: {len(visitados)}")
             print(f"Tiempo de ejecución: {end - star} segundos")
+            print(f"g(n) de cada nodo: {g_score}")
+            print(f"h(n) de cada nodo: {h_score}")
             mostrar_laberinto_coloreado(matriz, camino, f"Laberinto con camino A* ({heuristica}) (verde)")
             return
 
         if actual in visitados:
             continue
         visitados.add(actual)
-    
-    for dx, dy in [(-1,0), (1,0), (0,-1), (0,1)]:
-        nx, ny = actual[0] + dx, actual[1] + dy
-        if 0 <= nx < len(matriz) and 0 <= ny < len(matriz[0]) and matriz[nx][ny] != 0:
-            nuevo_costo = costo + matriz[nx][ny]
-            f_nuevo = nuevo_costo + heuristica_func((nx, ny))
-            heapq.heappush(queue, (f_nuevo, nuevo_costo, (nx, ny), camino + [(nx, ny)]))
+
+        for dx, dy in [(-1,0), (1,0), (0,-1), (0,1)]:
+            nx, ny = actual[0] + dx, actual[1] + dy
+            vecino = (nx, ny)
+            if 0 <= nx < len(matriz) and 0 <= ny < len(matriz[0]) and matriz[nx][ny] != 0:
+                tentative_g = g_score[actual] + matriz[nx][ny]
+                if vecino not in g_score or tentative_g < g_score[vecino]:
+                    padres[vecino] = actual
+                    g_score[vecino] = tentative_g
+                    h_score[vecino] = heuristica_func(vecino)
+                    f_nuevo = tentative_g + h_score[vecino]
+                    heapq.heappush(queue, (f_nuevo, tentative_g, vecino))
 
 
 def mostrar_laberinto_coloreado(matriz, camino, titulo):
