@@ -70,6 +70,7 @@ def menu():
             if arbol == None:
                 print("No se ha escojido ningún laberinto. Por favor, elige un laberinto primero.")
             else:
+                print("Has seleccionado A* con heurística Manhattan.")
                 a_estrella_camino(matriz, Inicio, heuristica="manhattan")
         elif choice == '2':
             if arbol == None:
