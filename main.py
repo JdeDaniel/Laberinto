@@ -58,8 +58,8 @@ def menu():
     choice = 0
     while choice != '5':
         print("Menu")
-        print("1. Resolver por BFS")
-        print("2. Resolver por DFS")
+        print("1. Resolver por A* Manhattan")
+        print("2. Resolver por A* Euclidiana")
         print("3. Resolver por Costos Uniformes")
         print("4. Cambiar laberinto")
         print("5. Salir")
@@ -70,12 +70,12 @@ def menu():
             if arbol == None:
                 print("No se ha escojido ningún laberinto. Por favor, elige un laberinto primero.")
             else:
-                bfs_camino(matriz, arbol, Inicio)
+                a_estrella_camino(matriz, Inicio, heuristica="manhattan")
         elif choice == '2':
             if arbol == None:
                 print("No se ha escojido ningún laberinto. Por favor, elige un laberinto primero.")
             else:
-                dfs_camino(matriz, arbol, Inicio)
+                a_estrella_camino(matriz, Inicio, heuristica="euclidiana")
         elif choice == '3':
             if arbol == None:
                 print("No se ha escojido ningún laberinto. Por favor, elige un laberinto primero.")

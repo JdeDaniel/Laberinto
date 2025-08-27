@@ -2,7 +2,12 @@ from collections import deque
 from colorama import Fore, Style, init
 import time
 import heapq
+import math
 init(autoreset=True)
+
+def calcular_costo_camino(matriz, camino):
+    # Suma los valores de la matriz en las posiciones del camino, excepto el inicio
+    return sum(matriz[i][j] for i, j in camino[1:])
 
 def bfs_camino(matriz, arbol, inicio):
     # Buscar la posición del objetivo (2)
@@ -22,25 +27,27 @@ def bfs_camino(matriz, arbol, inicio):
     # BFS para encontrar el camino
     star = time.time()
     queue = deque()
-    queue.append((inicio, [inicio], 0))  # (nodo_actual, camino_hasta_ahora)
+    queue.append((inicio, [inicio]))  # (nodo_actual, camino_hasta_ahora)
     visitados = set()
     visitados.add(inicio)
 
     while queue:
-        actual, camino, costo = queue.popleft()
+        actual, camino = queue.popleft()
         if actual == objetivo:
             end = time.time()
+            costo_total = calcular_costo_camino(matriz, camino)
             print(f"==BFS==")
+            print(f"Cambio")
             print(f"Longitud de la ruta: {len(camino) - 1}")
-            print(f"Costo total del camino: {costo -2}")
+            print(f"Costo total del camino: {costo_total}")
             print(f"Nodos visitados: {len(visitados) - 1}")
             print(f"Tiempo de ejecución: {end - star} segundos")
             mostrar_laberinto_coloreado(matriz, camino, "Laberinto con camino BFS (verde)")
+            return
 
         for hijo in arbol.get(actual, []):
             if hijo not in visitados:
-                costo = costo + matriz[hijo[0]][hijo[1]]
-                queue.append((hijo, camino + [hijo], costo))
+                queue.append((hijo, camino + [hijo]))
                 visitados.add(hijo)
 
 def dfs_camino(matriz, arbol, inicio):
@@ -58,24 +65,24 @@ def dfs_camino(matriz, arbol, inicio):
         print("No se encontró el nodo objetivo (2) en la matriz.")
 
     star = time.time()
-    stack = [(inicio, [inicio], 0)]
+    stack = [(inicio, [inicio])]
     visitados = set()
     visitados.add(inicio)
 
     while stack:
-        actual, camino, costo = stack.pop()
+        actual, camino = stack.pop()
         if actual == objetivo:
             end = time.time()
+            costo_total = calcular_costo_camino(matriz, camino)
             print(f"==DFS==")
             print(f"Longitud de la ruta: {len(camino) - 1}")
-            print(f"Costo total del camino: {costo -2}")
+            print(f"Costo total del camino: {costo_total}")
             print(f"Nodos visitados: {len(visitados) - 1}")
             print(f"Tiempo de ejecución: {end - star} segundos")
             mostrar_laberinto_coloreado(matriz, camino, "Laberinto con camino DFS (verde)")
         for hijo in arbol.get(actual, []):
             if hijo not in visitados:
-                costo = costo + matriz[hijo[0]][hijo[1]]
-                stack.append((hijo, camino + [hijo], costo))
+                stack.append((hijo, camino + [hijo]))
                 visitados.add(hijo)
 
 def costos_camino(matriz, inicio):
@@ -125,6 +132,57 @@ def costos_camino(matriz, inicio):
         print(f"Nodos visitados: {len(visitados) - 1}")
         print(f"Tiempo de ejecución: {end - star} segundos")
         mostrar_laberinto_coloreado(matriz, camino, "Laberinto con camino Costos Uniformes (verde)")
+
+def buscar_objetivo(matriz):
+    for i, fila in enumerate(matriz):
+        for j, valor in enumerate(fila):
+            if valor == 2:
+                return (i, j)
+    return None
+
+# ---------------- NUEVO: Algoritmo A* ---------------- #
+def a_estrella_camino(matriz, inicio, heuristica="manhattan"):
+    objetivo = buscar_objetivo(matriz)
+    if not objetivo:
+        print("No se encontró el nodo objetivo (2) en la matriz.")
+        return None
+
+    def heuristica_func(nodo):
+        if heuristica == "euclidiana":
+            return math.sqrt((nodo[0] - objetivo[0])**2 + (nodo[1] - objetivo[1])**2)
+        else: # Manhattan por defecto
+            return abs(nodo[0] - objetivo[0]) + abs(nodo[1] - objetivo[1])
+
+
+    star = time.time()
+    queue = []
+    heapq.heappush(queue, (0 + heuristica_func(inicio), 0, inicio, [inicio]))
+    visitados = set()
+
+
+    while queue:
+        f, costo, actual, camino = heapq.heappop(queue)
+        if actual == objetivo:
+            end = time.time()
+            print(f"==A* ({heuristica.capitalize()})==")
+            print(f"Longitud de la ruta: {len(camino) - 1}")
+            print(f"Costo total del camino: {costo - 2}")
+            print(f"Nodos visitados: {len(visitados)}")
+            print(f"Tiempo de ejecución: {end - star} segundos")
+            mostrar_laberinto_coloreado(matriz, camino, f"Laberinto con camino A* ({heuristica}) (verde)")
+            return
+
+        if actual in visitados:
+            continue
+        visitados.add(actual)
+    
+    for dx, dy in [(-1,0), (1,0), (0,-1), (0,1)]:
+        nx, ny = actual[0] + dx, actual[1] + dy
+        if 0 <= nx < len(matriz) and 0 <= ny < len(matriz[0]) and matriz[nx][ny] != 0:
+            nuevo_costo = costo + matriz[nx][ny]
+            f_nuevo = nuevo_costo + heuristica_func((nx, ny))
+            heapq.heappush(queue, (f_nuevo, nuevo_costo, (nx, ny), camino + [(nx, ny)]))
+
 
 def mostrar_laberinto_coloreado(matriz, camino, titulo):
     print(f"\n{titulo}")
