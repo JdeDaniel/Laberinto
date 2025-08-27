@@ -47,6 +47,7 @@ def escojer_mapa():
         for nodo, hijos in arbol.items(): # Imprime el árbol con nodos y sus hijos, borrar para entrega
             print(f"{nodo}: {hijos}")
         """
+        
     else:
         print("No se encontró el nodo de inicio (-1) en la matriz.") # Mensaje de erro  r si no se encuentra el nodo de inicio
         
