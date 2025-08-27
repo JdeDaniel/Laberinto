@@ -199,7 +199,7 @@ def a_estrella_camino(matriz, inicio, heuristica="manhattan"):
                     h_score[vecino] = heuristica_func(vecino)
                     f_nuevo = tentative_g + h_score[vecino]
                     heapq.heappush(queue, (f_nuevo, tentative_g, vecino))
-
+#nuevo
 
 def mostrar_laberinto_coloreado(matriz, camino, titulo):
     print(f"\n{titulo}")
