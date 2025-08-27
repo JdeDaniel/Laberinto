@@ -46,37 +46,47 @@ def escojer_mapa():
         print("\nÁrbol generado (coordenadas):")
         for nodo, hijos in arbol.items(): # Imprime el árbol con nodos y sus hijos, borrar para entrega
             print(f"{nodo}: {hijos}")
+        """
+        
     else:
         print("No se encontró el nodo de inicio (-1) en la matriz.") # Mensaje de erro  r si no se encuentra el nodo de inicio
-        """
+        
 
 
 def menu():
     global mapa, matriz, coordenadas, arbol, Inicio
     choice = 0
-    while choice != '4':
+    while choice != '5':
         print("Menu")
-        print("1. Resolver por BFS")
-        print("2. Resolver por DFS")
-        print("3. Cambiar laberinto")
-        print("4. Salir")
-        choice = input("Por favor selecciona una opcion (1-4): ")
+        print("1. Resolver por A* Manhattan")
+        print("2. Resolver por A* Euclidiana")
+        print("3. Resolver por Costos Uniformes")
+        print("4. Cambiar laberinto")
+        print("5. Salir")
+        choice = input("Por favor selecciona una opcion (1-5): ")
         
 
         if choice == '1':
             if arbol == None:
                 print("No se ha escojido ningún laberinto. Por favor, elige un laberinto primero.")
             else:
-                bfs_camino(matriz, arbol, Inicio)
+                print("Has seleccionado A* con heurística Manhattan.")
+                a_estrella_camino(matriz, Inicio, heuristica="manhattan")
         elif choice == '2':
             if arbol == None:
                 print("No se ha escojido ningún laberinto. Por favor, elige un laberinto primero.")
             else:
-                dfs_camino(matriz, arbol, Inicio)
+                a_estrella_camino(matriz, Inicio, heuristica="euclidiana")
         elif choice == '3':
-            matrizLaberinto = escojer_mapa()
+            if arbol == None:
+                print("No se ha escojido ningún laberinto. Por favor, elige un laberinto primero.")
+            else:
+                costos_camino(matriz, Inicio)
         elif choice == '4':
+            escojer_mapa()
+        elif choice == '5':
             print("Adios!")
+            return
         else:
             print("Opcion no valida.")
 
