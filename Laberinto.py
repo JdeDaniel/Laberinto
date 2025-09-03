@@ -176,7 +176,7 @@ def a_estrella_camino(matriz, inicio, heuristica="manhattan"):
             end = time.time()
             print(f"==A* ({heuristica.capitalize()})==")
             print(f"Longitud de la ruta: {len(camino) - 1}")
-            print(f"Costo total del camino: {g_score[actual]}")
+            print(f"Costo total del camino: {g_score[actual]-2}")
             print(f"Nodos visitados: {len(visitados)}")
             print(f"Tiempo de ejecución: {end - star} segundos")
             print(f"g(n) de cada nodo: {g_score}")
@@ -188,17 +188,31 @@ def a_estrella_camino(matriz, inicio, heuristica="manhattan"):
             continue
         visitados.add(actual)
 
-        for dx, dy in [(-1,0), (1,0), (0,-1), (0,1)]:
-            nx, ny = actual[0] + dx, actual[1] + dy
-            vecino = (nx, ny)
-            if 0 <= nx < len(matriz) and 0 <= ny < len(matriz[0]) and matriz[nx][ny] != 0:
-                tentative_g = g_score[actual] + matriz[nx][ny]
-                if vecino not in g_score or tentative_g < g_score[vecino]:
-                    padres[vecino] = actual
-                    g_score[vecino] = tentative_g
-                    h_score[vecino] = heuristica_func(vecino)
-                    f_nuevo = tentative_g + h_score[vecino]
-                    heapq.heappush(queue, (f_nuevo, tentative_g, vecino))
+        if heuristica == "manhattan":
+            for dx, dy in [(-1,0), (1,0), (0,-1), (0,1)]:
+                nx, ny = actual[0] + dx, actual[1] + dy
+                vecino = (nx, ny)
+                if 0 <= nx < len(matriz) and 0 <= ny < len(matriz[0]) and matriz[nx][ny] != 0:
+                    tentative_g = g_score[actual] + matriz[nx][ny]
+                    if vecino not in g_score or tentative_g < g_score[vecino]:
+                        padres[vecino] = actual
+                        g_score[vecino] = tentative_g
+                        h_score[vecino] = heuristica_func(vecino)
+                        f_nuevo = tentative_g + h_score[vecino]
+                        heapq.heappush(queue, (f_nuevo, tentative_g, vecino))
+        elif heuristica == "euclidiana":
+            for dx, dy in [(-1,0), (1,0), (0,-1), (0,1), (-1,-1), (-1,1), (1,-1), (1,1)]:
+                nx, ny = actual[0] + dx, actual[1] + dy
+                vecino = (nx, ny)
+                if 0 <= nx < len(matriz) and 0 <= ny < len(matriz[0]) and matriz[nx][ny] != 0:
+                    tentative_g = g_score[actual] + matriz[nx][ny]
+                    if vecino not in g_score or tentative_g < g_score[vecino]:
+                        padres[vecino] = actual
+                        g_score[vecino] = tentative_g
+                        h_score[vecino] = heuristica_func(vecino)
+                        f_nuevo = tentative_g + h_score[vecino]
+                        heapq.heappush(queue, (f_nuevo, tentative_g, vecino))
+
 #nuevo
 
 def mostrar_laberinto_coloreado(matriz, camino, titulo):
