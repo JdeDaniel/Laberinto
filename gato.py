@@ -41,6 +41,7 @@ def insertLetter(letter, position):
         position = int(input("Please enter new position:  "))
         insertLetter(letter, position)
         return
+    
 def checkForWin():
     if (board[1] == board[2] and board[1] == board[3] and board[1] != ' '):
         return True

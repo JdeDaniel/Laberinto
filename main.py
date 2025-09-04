@@ -11,6 +11,7 @@ print("4, 5, 6 ")
 print("7, 8, 9 ")
 print("\n")
 
+"""
 def compMove():
     
     bestScore = -math.inf
@@ -26,6 +27,27 @@ def compMove():
                 bestMove = key
 
     insertLetter(bot, bestMove)
+    return
+"""
+    
+def compMove():
+    bestScore = -math.inf
+    bestMove = None
+    bestDepth = math.inf
+
+    for key in board.keys():
+        if board[key] == ' ':
+            board[key] = bot
+            score, depth = minimax(bot, player, board, 0, False)
+            board[key] = ' '
+            # Si el puntaje es mejor, o igual pero gana más rápido
+            if (score > bestScore) or (score == bestScore and depth < bestDepth):
+                bestScore = score
+                bestMove = key
+                bestDepth = depth
+
+    if bestMove is not None:
+        insertLetter(bot, bestMove)
     return
 
 def playerMove():
