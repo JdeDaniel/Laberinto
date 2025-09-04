@@ -1,11 +1,7 @@
 import math
 from gato import checkWhichMarkWon, checkDraw, board
 
-
-
-def minimax(bot, player, board, depth, isMaximizing):
-    alpha = -math.inf
-    beta = math.inf
+def minimax(bot, player, board, depth, isMaximizing, alpha=-math.inf, beta=math.inf):
     if (checkWhichMarkWon(bot)):
         return 1
     elif (checkWhichMarkWon(player)):
@@ -14,24 +10,31 @@ def minimax(bot, player, board, depth, isMaximizing):
         return 0
 
     if (isMaximizing):
+        maxEval = -math.inf
         for key in board.keys():
             if (board[key] == ' '):
                 board[key] = bot
-                tempAlpha = minimax(bot, player, board, depth + 1, False)
+                eval = minimax(bot, player, board, depth + 1, False, alpha, beta)
                 board[key] = ' '
-                if (tempAlpha > alpha):
-                    alpha = tempAlpha
-        return alpha
+                maxEval = max(maxEval, eval)
+                alpha = max(alpha, eval)
+                if beta <= alpha:
+                    #print("Alpha: " + str(alpha) + " Beta: " + str(beta))
+                    break
+        return maxEval
 
     else:
-        bestScore = math.inf #beta
+        minEval = math.inf
         for key in board.keys():
             if (board[key] == ' '):
                 board[key] = player
-                score = minimax(bot, player, board, depth + 1, True)
+                eval = minimax(bot, player, board, depth + 1, True, alpha, beta)
                 board[key] = ' '
-                if (score < bestScore):
-                    bestScore = score
-        return bestScore
+                minEval = min(minEval, eval)
+                beta = min(beta, eval)
+                if beta >= alpha:
+                    #print("Alpha: " + str(alpha) + " Beta: " + str(beta))
+                    break
+        return minEval
 
 

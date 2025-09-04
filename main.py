@@ -19,7 +19,6 @@ def compMove():
     for key in board.keys():
         if (board[key] == ' '):
             board[key] = bot
-            
             score = minimax(bot, player, board, 0, False)
             board[key] = ' '
             if (score > bestScore):
