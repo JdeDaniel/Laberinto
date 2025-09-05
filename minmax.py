@@ -1,44 +1,44 @@
 import math
-from gato import checkWhichMarkWon, checkDraw, board
+from gato import revisaQuien, empate, tablero
 
-def minimax(bot, player, board, depth, isMaximizing, alpha=-math.inf, beta=math.inf):
-    if (checkWhichMarkWon(bot)):
-        return 1, depth
-    elif (checkWhichMarkWon(player)):
-        return -1, depth
-    elif (checkDraw()):
-        return 0, depth
+def minimax(bot, jugador, tablero, profundidad, isMaximizing, alpha=-math.inf, beta=math.inf):
+    if (revisaQuien(bot)):
+        return 1, profundidad
+    elif (revisaQuien(jugador)):
+        return -1, profundidad
+    elif (empate()):
+        return 0, profundidad
 
     if isMaximizing:
         maxEval = -math.inf
-        minDepth = math.inf
-        for key in board.keys():
-            if (board[key] == ' '):
-                board[key] = bot
-                eval, evalDepth = minimax(bot, player, board, depth + 1, False, alpha, beta)
-                board[key] = ' '
-                if eval > maxEval or (eval == maxEval and evalDepth < minDepth):
+        minprofundidad = math.inf
+        for lugar in tablero.keys():
+            if (tablero[lugar] == ' '):
+                tablero[lugar] = bot
+                eval, evalprofundidad = minimax(bot, jugador, tablero, profundidad + 1, False, alpha, beta)
+                tablero[lugar] = ' '
+                if eval > maxEval or (eval == maxEval and evalprofundidad < minprofundidad):
                     maxEval = eval
-                    minDepth = evalDepth
+                    minprofundidad = evalprofundidad
                 alpha = max(alpha, eval)
                 if beta <= alpha:
                     break
-        return maxEval, minDepth
+        return maxEval, minprofundidad
 
     else:
         minEval = math.inf
-        minDepth = math.inf
-        for key in board.keys():
-            if (board[key] == ' '):
-                board[key] = player
-                eval, evalDepth = minimax(bot, player, board, depth + 1, True, alpha, beta)
-                board[key] = ' '
-                if eval < minEval or (eval == minEval and evalDepth < minDepth):
+        minprofundidad = math.inf
+        for lugar in tablero.keys():
+            if (tablero[lugar] == ' '):
+                tablero[lugar] = jugador
+                eval, evalprofundidad = minimax(bot, jugador, tablero, profundidad + 1, True, alpha, beta)
+                tablero[lugar] = ' '
+                if eval < minEval or (eval == minEval and evalprofundidad < minprofundidad):
                     minEval = eval
-                    minDepth = evalDepth
+                    minprofundidad = evalprofundidad
                 beta = min(beta, eval)
                 if beta <= alpha:
                     break
-        return minEval, minDepth
+        return minEval, minprofundidad
 
 

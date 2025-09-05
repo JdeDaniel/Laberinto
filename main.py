@@ -1,64 +1,46 @@
 from gato import *
 from minmax import *
 
-
-
-printBoard(board)
-print("Computer goes first! Good luck.")
-print("Positions are as follow:")
+imprimeTablero(tablero)
+print("Bienvenido al juego de gato")
+print("Tu eres 'O' y la computadora es 'X'")
+print("Para hacer una jugada, elige un numero del 1 al 9")
+print("El tablero es asi:")
 print("1, 2, 3 ")
 print("4, 5, 6 ")
 print("7, 8, 9 ")
+print("X empieza primero, buena suerte")
 print("\n")
-
-"""
-def compMove():
-    
-    bestScore = -math.inf
-    bestMove = 0
-    
-    for key in board.keys():
-        if (board[key] == ' '):
-            board[key] = bot
-            score = minimax(bot, player, board, 0, False)
-            board[key] = ' '
-            if (score > bestScore):
-                bestScore = score
-                bestMove = key
-
-    insertLetter(bot, bestMove)
-    return
-"""
     
 def compMove():
-    bestScore = -math.inf
-    bestMove = None
-    bestDepth = math.inf
+    mejorPuntaje = -math.inf
+    mejorMovimiento = None
+    mejorProfundidad = math.inf
 
-    for key in board.keys():
-        if board[key] == ' ':
-            board[key] = bot
-            score, depth = minimax(bot, player, board, 0, False)
-            board[key] = ' '
+    for lugar in tablero.keys():
+        if tablero[lugar] == ' ':
+            tablero[lugar] = bot
+            puntaje, profundidad = minimax(bot, jugador, tablero, 0, False)
+            tablero[lugar] = ' '
             # Si el puntaje es mejor, o igual pero gana más rápido
-            if (score > bestScore) or (score == bestScore and depth < bestDepth):
-                bestScore = score
-                bestMove = key
-                bestDepth = depth
+            if (puntaje > mejorPuntaje) or (puntaje == mejorPuntaje and profundidad < mejorProfundidad):
+                mejorPuntaje = puntaje
+                mejorMovimiento = lugar
+                mejorProfundidad = profundidad
 
-    if bestMove is not None:
-        insertLetter(bot, bestMove)
+    if mejorMovimiento is not None:
+        ingresoJugada(bot, mejorMovimiento)
     return
 
-def playerMove():
-    position = int(input("Enter the position for 'O':  "))
-    insertLetter(player, position)
+def movimientoJugador():
+    posicion = int(input("Ingrese posicion para 'O':  "))
+    ingresoJugada(jugador, posicion)
     return
 
 global firstComputerMove
 firstComputerMove = True
 
-while not checkForWin():
+while not revisaGanador():
     compMove()
-    playerMove()
+    movimientoJugador()
 

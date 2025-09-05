@@ -1,101 +1,88 @@
-
-player = 'O'
+jugador = 'O'
 bot = 'X'
 
-def printBoard(board):
-    print(board[1] + '|' + board[2] + '|' + board[3])
+def imprimeTablero(tablero):
+    print(tablero[1] + '|' + tablero[2] + '|' + tablero[3])
     print('-+-+-')
-    print(board[4] + '|' + board[5] + '|' + board[6])
+    print(tablero[4] + '|' + tablero[5] + '|' + tablero[6])
     print('-+-+-')
-    print(board[7] + '|' + board[8] + '|' + board[9])
+    print(tablero[7] + '|' + tablero[8] + '|' + tablero[9])
     print("\n")
 
-
-def spaceIsFree(position):
-    if board[position] == ' ':
+def espacioDisponible(posicion):
+    if tablero[posicion] == ' ':
         return True
     else:
         return False
 
-
-def insertLetter(letter, position):
-    if spaceIsFree(position):
-        board[position] = letter
-        printBoard(board)
-        if (checkDraw()):
-            print("Draw!")
+def ingresoJugada(letra, posicion):
+    if espacioDisponible(posicion):
+        tablero[posicion] = letra
+        imprimeTablero(tablero)
+        if (empate()):
+            print("Empate")
             exit()
-        if checkForWin():
-            if letter == 'X':
-                print("Bot wins!")
+        if revisaGanador():
+            if letra == 'X':
+                print("Gana la computadora")
                 exit()
             else:
-                print("Player wins!")
+                print("Jugador gana")
                 exit()
-
         return
-
-
     else:
-        print("Can't insert there!")
-        position = int(input("Please enter new position:  "))
-        insertLetter(letter, position)
+        print("Jugada no valida")
+        posicion = int(input("Porfavor elige otro espacio:  "))
+        ingresoJugada(letra, posicion)
         return
     
-def checkForWin():
-    if (board[1] == board[2] and board[1] == board[3] and board[1] != ' '):
+def revisaGanador():
+    if (tablero[1] == tablero[2] and tablero[1] == tablero[3] and tablero[1] != ' '):
         return True
-    elif (board[4] == board[5] and board[4] == board[6] and board[4] != ' '):
+    elif (tablero[4] == tablero[5] and tablero[4] == tablero[6] and tablero[4] != ' '):
         return True
-    elif (board[7] == board[8] and board[7] == board[9] and board[7] != ' '):
+    elif (tablero[7] == tablero[8] and tablero[7] == tablero[9] and tablero[7] != ' '):
         return True
-    elif (board[1] == board[4] and board[1] == board[7] and board[1] != ' '):
+    elif (tablero[1] == tablero[4] and tablero[1] == tablero[7] and tablero[1] != ' '):
         return True
-    elif (board[2] == board[5] and board[2] == board[8] and board[2] != ' '):
+    elif (tablero[2] == tablero[5] and tablero[2] == tablero[8] and tablero[2] != ' '):
         return True
-    elif (board[3] == board[6] and board[3] == board[9] and board[3] != ' '):
+    elif (tablero[3] == tablero[6] and tablero[3] == tablero[9] and tablero[3] != ' '):
         return True
-    elif (board[1] == board[5] and board[1] == board[9] and board[1] != ' '):
+    elif (tablero[1] == tablero[5] and tablero[1] == tablero[9] and tablero[1] != ' '):
         return True
-    elif (board[7] == board[5] and board[7] == board[3] and board[7] != ' '):
+    elif (tablero[7] == tablero[5] and tablero[7] == tablero[3] and tablero[7] != ' '):
+        return True
+    else:
+        return False
+
+def revisaQuien(mark): 
+    if tablero[1] == tablero[2] and tablero[1] == tablero[3] and tablero[1] == mark:
+        return True
+    elif (tablero[4] == tablero[5] and tablero[4] == tablero[6] and tablero[4] == mark):
+        return True
+    elif (tablero[7] == tablero[8] and tablero[7] == tablero[9] and tablero[7] == mark):
+        return True
+    elif (tablero[1] == tablero[4] and tablero[1] == tablero[7] and tablero[1] == mark):
+        return True
+    elif (tablero[2] == tablero[5] and tablero[2] == tablero[8] and tablero[2] == mark):
+        return True
+    elif (tablero[3] == tablero[6] and tablero[3] == tablero[9] and tablero[3] == mark):
+        return True
+    elif (tablero[1] == tablero[5] and tablero[1] == tablero[9] and tablero[1] == mark):
+        return True
+    elif (tablero[7] == tablero[5] and tablero[7] == tablero[3] and tablero[7] == mark):
         return True
     else:
         return False
 
 
-def checkWhichMarkWon(mark):
-    
-    if board[1] == board[2] and board[1] == board[3] and board[1] == mark:
-        return True
-    elif (board[4] == board[5] and board[4] == board[6] and board[4] == mark):
-        return True
-    elif (board[7] == board[8] and board[7] == board[9] and board[7] == mark):
-        return True
-    elif (board[1] == board[4] and board[1] == board[7] and board[1] == mark):
-        return True
-    elif (board[2] == board[5] and board[2] == board[8] and board[2] == mark):
-        return True
-    elif (board[3] == board[6] and board[3] == board[9] and board[3] == mark):
-        return True
-    elif (board[1] == board[5] and board[1] == board[9] and board[1] == mark):
-        return True
-    elif (board[7] == board[5] and board[7] == board[3] and board[7] == mark):
-        return True
-    else:
-        return False
-
-
-def checkDraw():
-    for key in board.keys():
-        if (board[key] == ' '):
+def empate():
+    for lugar in tablero.keys():
+        if (tablero[lugar] == ' '):
             return False
     return True
 
-
-
-
-
-
-board = {1: ' ', 2: ' ', 3: ' ',
+tablero = {1: ' ', 2: ' ', 3: ' ',
          4: ' ', 5: ' ', 6: ' ',
          7: ' ', 8: ' ', 9: ' '}
