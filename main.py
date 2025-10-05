@@ -1,46 +1,31 @@
-from gato import *
-from minmax import *
+from perceptron import *
+from datos import *
 
-imprimeTablero(tablero)
-print("Bienvenido al juego de gato")
-print("Tu eres 'O' y la computadora es 'X'")
-print("Para hacer una jugada, elige un numero del 1 al 9")
-print("El tablero es asi:")
-print("1, 2, 3 ")
-print("4, 5, 6 ")
-print("7, 8, 9 ")
-print("X empieza primero, buena suerte")
-print("\n")
-    
-def compMove():
-    mejorPuntaje = -math.inf
-    mejorMovimiento = None
-    mejorProfundidad = math.inf
+class main:
 
-    for lugar in tablero.keys():
-        if tablero[lugar] == ' ':
-            tablero[lugar] = bot
-            puntaje, profundidad = minimax(bot, jugador, tablero, 0, False)
-            tablero[lugar] = ' '
-            # Si el puntaje es mejor, o igual pero gana más rápido
-            if (puntaje > mejorPuntaje) or (puntaje == mejorPuntaje and profundidad < mejorProfundidad):
-                mejorPuntaje = puntaje
-                mejorMovimiento = lugar
-                mejorProfundidad = profundidad
+    aprendizaje = 0.0
+    epocas = 0
 
-    if mejorMovimiento is not None:
-        ingresoJugada(bot, mejorMovimiento)
-    return
+    def menu():
+        print("Ingrese la tasa de aprendizaje (entre 0 y 1): ")
+        main.aprendizaje = float(input())
+        if main.aprendizaje < 0 or main.aprendizaje > 1:
+            print("La tasa de aprendizaje debe estar entre 0 y 1")
+            exit()
+        print("Ingrese el numero de epocas: ") 
+        main.epocas = int(input())
 
-def movimientoJugador():
-    posicion = int(input("Ingrese posicion para 'O':  "))
-    ingresoJugada(jugador, posicion)
-    return
+    def main():
+        while True:
+            main.menu()
+            datos1 = datos()
+            entradas, salidas = datos1.transformar()
+            perceptron = preceptron()
+            perceptron.entrenar(entradas, salidas, main.aprendizaje, main.epocas)
+            print("Desea continuar? (s/n)")
+            opcion = input()
+            if opcion.lower() != 's':
+                break
+        
 
-global firstComputerMove
-firstComputerMove = True
-
-while not revisaGanador():
-    compMove()
-    movimientoJugador()
-
+main.main()
