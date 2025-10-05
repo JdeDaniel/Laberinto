@@ -6,7 +6,7 @@ class main:
     aprendizaje = 0.0
     epocas = 0
 
-    def menu():
+    def menu(): # Menu para ingresar la tasa de aprendizaje y el numero de epocas
         print("Ingrese la tasa de aprendizaje (entre 0 y 1): ")
         main.aprendizaje = float(input())
         if main.aprendizaje < 0 or main.aprendizaje > 1:
